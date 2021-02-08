@@ -7,14 +7,14 @@ import CommentList from "./CommentList";
 const PostList = () => {
   const { data } = useQuery<{ data: { id: string; title: string } }>(
     "posts",
-    async () => await axios.get("http://localhost:4000/posts")
+    async () => await axios.get("http://localhost:4002/posts")
   );
   let posts: any = data && Object.values(data.data);
 
   return (
     <div className="flex-row flex-wrap d-flex justify-content-between">
       {posts
-        ? posts.map((post: { id: string; title: string }) => (
+        ? posts.map((post: { id: string; title: string; comments: [] }) => (
             <div
               className="card"
               style={{ width: "30%", marginBottom: "20px" }}
@@ -23,7 +23,7 @@ const PostList = () => {
               <div className="card-body">
                 <h3>{post.title}</h3>
               </div>
-              <CommentList postId={post.id} />
+              <CommentList comments={post.comments} />
               <CommentCreate postId={post.id} />
             </div>
           ))

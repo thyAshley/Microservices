@@ -1,26 +1,16 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
 
 interface CommentListAttribute {
-  postId: string;
+  comments: {
+    id: string;
+    content: string;
+  }[];
 }
 
-const CommentList: React.FC<CommentListAttribute> = ({ postId }) => {
-  const [comments, setComments] = useState([]);
-
-  useEffect(() => {
-    const getComments = async () => {
-      const result = await axios.get(
-        `http://localhost:4001/posts/${postId}/comments`
-      );
-      setComments(result.data);
-    };
-    getComments();
-  }, []);
-
+const CommentList: React.FC<CommentListAttribute> = ({ comments }) => {
   return (
     <ul>
-      {comments.map((comment: { id: string; content: string }) => (
+      {comments.map((comment) => (
         <li key={comment.id}>{comment.content}</li>
       ))}
     </ul>

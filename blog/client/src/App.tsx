@@ -2,6 +2,7 @@ import React from "react";
 import PostCreate from "./PostCreate";
 import { QueryClient, QueryClientProvider } from "react-query";
 import PostList from "./PostList";
+import CommentList from "./CommentList";
 
 const queryClient = new QueryClient();
 

@@ -4,6 +4,7 @@ import cors from "cors";
 interface CommentAttribute {
   id: string;
   content: string;
+  status: string;
 }
 
 interface postsAttribute {
@@ -29,10 +30,9 @@ app.post("/events", (req, res) => {
   }
 
   if (type === "CommentCreated") {
-    const { id, content, postId } = data;
-
+    const { id, content, postId, status } = data;
     const post = posts[postId];
-    post.comments!.push({ id, content });
+    post.comments!.push({ id, content, status });
   }
   console.log(posts);
   res.status(200).send({});

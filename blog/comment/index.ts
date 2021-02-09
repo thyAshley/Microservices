@@ -7,7 +7,9 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const commentsList: { [key: string]: [{}] } = {};
+const commentsList: {
+  [key: string]: [{ id: string; content: string; status: string }];
+} = {};
 app.get("/posts/:id/comments", (req, res) => {
   res.send(commentsList[req.params.id] || []);
 });
@@ -31,8 +33,26 @@ app.post("/posts/:id/comments", async (req, res) => {
   res.status(201).send(comments);
 });
 
-app.post("/events", (req, res) => {
+app.post("/events", async (req, res) => {
   console.log("received event", req.body.type);
+  const { type, data } = req.body;
+  if (type === "CommentModerated") {
+    const { postId, id, status, content } = data;
+    const comments = commentsList[postId];
+    const comment = comments.find((c) => c.id === id);
+    if (comment) {
+      comment.status = status;
+      await axios.post("http://localhost:4005/events", {
+        type: "CommentUpdated",
+        data: {
+          id: id,
+          content: content,
+          postId: req.params.id,
+          status: status,
+        },
+      });
+    }
+  }
   res.send({});
 });
 
